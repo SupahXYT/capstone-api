@@ -16,11 +16,13 @@ from mongoengine import (
     signals
 )
 
+
 class TaskStatus:
     INACTIVE = -1
     SUBMITTED = 0
     APPROVED = 1
     REJECTED = 2
+
 
 class QueueRequest(Document):
     uuid = StringField()
@@ -29,7 +31,7 @@ class QueueRequest(Document):
     def find_policy(cls, sender, document, **kwargs):
         for request in cls.objects():
             print(f'getting company info {request.uuid}')
-            scraper = company.Scraper(request.uuid)
+            scraper = company.PolicyFinder(request.uuid)
 
             company_obj = scraper.get_company()
             scraper.find_company()
@@ -42,6 +44,7 @@ class QueueRequest(Document):
 
             cls.objects(uuid=request.uuid).delete()
 
+
 class User(Document):
     email = EmailField()
     password_hash = StringField()
@@ -52,7 +55,8 @@ class User(Document):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-# all values are encrypted on the client side 
+
+# all values are encrypted on the client side
 class UserOptInfo(Document):
     user = ReferenceField(User)
     fname = StringField()
@@ -66,10 +70,12 @@ class UserOptInfo(Document):
     country = StringField()
     maid = StringField() # mobile advertising identifier
 
+
 class Task(Document):
     user = ReferenceField(User)
     company = ReferenceField(Company)
     status = IntField()
+
 
 class NoUserTask(Document):
     company = ReferenceField(Company)

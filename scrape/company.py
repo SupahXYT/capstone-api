@@ -21,6 +21,7 @@ MAP = {
     'inference': 10
 }
 
+
 def url_error_handling(fn):
     def check(*args): 
         try: 
@@ -33,13 +34,20 @@ def url_error_handling(fn):
 # works on element references, which causes a lot of problems
 # That's why BeautifulSoup is used instead
 
-class Scraper:
-    DRIVER = webdriver.Firefox()
+
+class PolicyFinder:
 
     def __init__(self, uuid):
+        self.driver = webdriver.Firefox()
         self.uuid = uuid
         self.company = Company(uuid=uuid)
         self.policy = Policy(uuid=uuid)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.driver.quit()
 
     def find_policy(self):
         self.policy.do_not_sell = self.do_not_sell(

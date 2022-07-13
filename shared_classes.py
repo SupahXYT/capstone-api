@@ -8,6 +8,7 @@ from mongoengine import (
     EmailField
 )
 
+
 class Policy(Document):
     uuid = StringField()
     url = URLField()
@@ -18,6 +19,7 @@ class Policy(Document):
     opt_out_email = ListField()
     opt_out_url = StringField()
 
+
 class Company(Document):
     name = StringField()
     uuid = StringField()
@@ -25,6 +27,7 @@ class Company(Document):
     image = StringField()
     url = StringField()
     policy = ReferenceField(Policy)
+
 
 class DataBroker(Document):
     name = StringField()
